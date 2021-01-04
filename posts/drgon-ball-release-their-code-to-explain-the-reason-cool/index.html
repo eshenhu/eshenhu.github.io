@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Drgon ball release their code to explain the reason, cool - shengli&#39;s blog</title><link rel="icon" type="image/png" href=icons/myicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Drgon ball release their code to explain the reason, cool" />
+<meta property="og:description" content="Today, I was surffing the web and saw a very interesting story about the players suspected the Drogon Ball game maker cheat on the game here and here" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://eshenhu.github.io/posts/drgon-ball-release-their-code-to-explain-the-reason-cool/" />
+<meta property="article:published_time" content="2018-11-01T23:17:32+00:00" />
+<meta property="article:modified_time" content="2018-11-01T23:17:32+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Drgon ball release their code to explain the reason, cool"/>
+<meta name="twitter:description" content="Today, I was surffing the web and saw a very interesting story about the players suspected the Drogon Ball game maker cheat on the game here and here"/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://eshenhu.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://eshenhu.github.io/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="https://eshenhu.github.io/css/custom.css" />
+	
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://eshenhu.github.io/js/main.js"></script>
+	<script src="https://eshenhu.github.io/js/abc.js"></script>
+	<script src="https://eshenhu.github.io/js/xyz.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<base href="https://eshenhu.github.io/">
+	<h1 class="site-title"><a href="https://eshenhu.github.io/">shengli&#39;s blog</a></h1>
+	<div class="site-description"><h2>Tick the World</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/eshenhu/" title="Github"><i data-feather="github"></i></a><a href="https://www.linkedin.com/in/shengli-hu/" title="LinkedIn"><i data-feather="linkedin"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Drgon ball release their code to explain the reason, cool</h1>
+			<div class="meta">Posted at &mdash; Nov 1, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<p>Today, I was surffing the web and saw a very interesting story about the players suspected the <em>Drogon Ball</em> game maker cheat on the game <a href="https://news.nicovideo.jp/watch/nw3072710">here</a> and <a href="https://dbz-dokkan.bngames.net/info1116.html">here</a></p>
+<p><em>Dragon Ball</em> finally release their code to explain the reason, which is really <em>HACKER</em> way. I like it. In now days, as a player, you 
+need not only the crack skills as before, but also some basic code skills. :-)</p>
+<p>About the problem:</p>
+<blockquote>
+</blockquote>
+<p>In the game application &quot; Dragon Ball Z Dokkan Battle &quot; there was a typographical mistake in some gacha and the influence &quot;There might have been a character that does not appear for each user (whether there was a wrong setting)&quot; According to the problem being said, the management side explained &ldquo;by mistake of notation&rdquo;. However, the source code has been released this time whether the riot did not fit.</p>
+<p><img src="img/info1116_01.png" alt="info1116_01.png"></p>
+<p>Some points were here:</p>
+<ul>
+<li><em>Dragon Ball</em> partly use C++ 11 as their back-end system.</li>
+<li><em>Dragon Ball</em> use <code>cache</code> system to cache the CardId for players.</li>
+<li>If cache was missed, then the function will lookup the data in back-end Sqlite.</li>
+<li>The return value <code>result</code> will RVO(Return Value Opti) by the compiler, so no copy will happened between caller and callee.</li>
+</ul>
+<p>The problem caused by the Sql query and following handling branch.</p>
+<p>Beside the logical error, some improvements could be:</p>
+<ul>
+<li>Line 3 and Line 4 can be optimized in one line during <em>constructor</em>, it will be better if</li>
+</ul>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">vector<span style="color:#719e07">&lt;</span>CardDataPtr<span style="color:#719e07">&gt;</span> result(masterCardIds.size());
+
+</code></pre></div><ul>
+<li>
+<p>All the self-incremental operation can be optimized by &ldquo;++i&rdquo; instead of &ldquo;i++&rdquo;.</p>
+</li>
+<li>
+<p>I am thinking the number of players will be dynamic changed, f.g. in the weekend or the evening, the player will be more than normal, assume <em>cache</em> system use <em>LRU</em> to do update, if the <em>cache</em> was not quite config well, f.g. the size was config with a relative small value comparing with number of players, it means this function will mostly lookup the value to the sqlite, Sqlite will be busy during this time, in some worse-case scenario, it will dramaticlly decrease the performance of the system.</p>
+<p>So, the <em>cache</em> system should know about this, increase the capacity to cache more data than normal, it means it was needed to emit a performance counter data to the <em>monitor</em> system between the block 1 and block 2 in the picture to tell how frequency of <em>Query</em> request for CardData, later system tuning will be considered if some system bottleneck was happened.</p>
+</li>
+</ul>
+<p>Finally, I like the working way of <em>Dragon Ball</em> exposing the problem. It is cool.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = 'eshenhu';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> © Copyright notice |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-123-45', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+<script>feather.replace()</script>
+</body>
+</html>

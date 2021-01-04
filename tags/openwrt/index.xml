@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>openwrt on shengli&#39;s blog</title>
+    <link>https://eshenhu.github.io/tags/openwrt/</link>
+    <description>Recent content in openwrt on shengli&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Wed, 22 Nov 2017 18:51:28 +0000</lastBuildDate><atom:link href="https://eshenhu.github.io/tags/openwrt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Build service with SOA in Openwrt</title>
+      <link>https://eshenhu.github.io/posts/build-service-with-soa-in-openwrt/</link>
+      <pubDate>Wed, 22 Nov 2017 18:51:28 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/build-service-with-soa-in-openwrt/</guid>
+      <description>In one of internal technical review meeting, the coder integrate the service into a existed substance/service, but considering of the scalability of this service, I strongly recommended the developer decouple this service from any substance and made them into a self-contained substance in order to provide the service to more clients in the future.</description>
+    </item>
+    
+  </channel>
+</rss>

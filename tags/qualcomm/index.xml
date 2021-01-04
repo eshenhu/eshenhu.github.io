@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Qualcomm on shengli&#39;s blog</title>
+    <link>https://eshenhu.github.io/tags/qualcomm/</link>
+    <description>Recent content in Qualcomm on shengli&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Wed, 05 Dec 2018 22:58:04 +0000</lastBuildDate><atom:link href="https://eshenhu.github.io/tags/qualcomm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SMEM,SMD,SMSM 1/3</title>
+      <link>https://eshenhu.github.io/posts/smem-smd-smsm-1-3/</link>
+      <pubDate>Wed, 05 Dec 2018 22:58:04 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/smem-smd-smsm-1-3/</guid>
+      <description>SMEM,SMD,SMSM (1/3) Recent half of year, I made development on Qualcomm platform FSM990x, which is ARM A7 based, same core with Mobile phone a few years ago, but equipped with more powerful DSP and FPGA capability for special purpose.</description>
+    </item>
+    
+  </channel>
+</rss>

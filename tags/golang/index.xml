@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>golang on shengli&#39;s blog</title>
+    <link>https://eshenhu.github.io/tags/golang/</link>
+    <description>Recent content in golang on shengli&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Sat, 03 Oct 2020 21:46:58 +0000</lastBuildDate><atom:link href="https://eshenhu.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Init object with functional options</title>
+      <link>https://eshenhu.github.io/posts/init-object-with-functional-options/</link>
+      <pubDate>Sat, 03 Oct 2020 21:46:58 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/init-object-with-functional-options/</guid>
+      <description>Motivation During the coding, we often need to make some configuration on &amp;ldquo;object&amp;rdquo; or &amp;ldquo;entity&amp;rdquo;. In Golang&amp;rsquo;s world, the following example:</description>
+    </item>
+    
+    <item>
+      <title>Golang-race-condition-detection-result-will-not-happene-always</title>
+      <link>https://eshenhu.github.io/posts/golang-race-condition-detection-result-will-not-happene-always/</link>
+      <pubDate>Mon, 18 Feb 2019 21:49:35 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/golang-race-condition-detection-result-will-not-happene-always/</guid>
+      <description>[TOC]
+Dave Cheney post a quiz on his blog several years ago,
+code
+package main import ( &amp;#34;fmt&amp;#34; &amp;#34;time&amp;#34; ) type RPC struct { result int done chan struct{} } func (rpc *RPC) compute() { time.</description>
+    </item>
+    
+    <item>
+      <title>(Hu)go Template Primer</title>
+      <link>https://eshenhu.github.io/posts/goisforlovers/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/goisforlovers/</guid>
+      <description>Hugo uses the excellent go html/template library for its template engine. It is an extremely lightweight engine that provides a very small amount of logic.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started with Hugo</title>
+      <link>https://eshenhu.github.io/posts/hugoisforlovers/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/hugoisforlovers/</guid>
+      <description>Step 1. Install Hugo Goto hugo releases and download the appropriate version for your os and architecture.
+Save it somewhere specific as we will be using it in the next step.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>eTrice (A open source ROOM framework for simplify your work) - shengli&#39;s blog</title><link rel="icon" type="image/png" href=icons/myicon.png /><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="eTrice (A open source ROOM framework for simplify your work)" />
+<meta property="og:description" content="Motivation The well known event-drive message framework such as libevent, libuv, was wide used on many open source project, such like node-js, but the drawback is" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://eshenhu.github.io/posts/etrice/" />
+<meta property="article:published_time" content="2019-08-20T11:30:28+00:00" />
+<meta property="article:modified_time" content="2019-08-20T11:30:28+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="eTrice (A open source ROOM framework for simplify your work)"/>
+<meta name="twitter:description" content="Motivation The well known event-drive message framework such as libevent, libuv, was wide used on many open source project, such like node-js, but the drawback is"/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://eshenhu.github.io/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://eshenhu.github.io/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="https://eshenhu.github.io/css/custom.css" />
+	
+
+	<script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+	<script src="https://eshenhu.github.io/js/main.js"></script>
+	<script src="https://eshenhu.github.io/js/abc.js"></script>
+	<script src="https://eshenhu.github.io/js/xyz.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<base href="https://eshenhu.github.io/">
+	<h1 class="site-title"><a href="https://eshenhu.github.io/">shengli&#39;s blog</a></h1>
+	<div class="site-description"><h2>Tick the World</h2><nav class="nav social">
+			<ul class="flat"><a href="https://github.com/eshenhu/" title="Github"><i data-feather="github"></i></a><a href="https://www.linkedin.com/in/shengli-hu/" title="LinkedIn"><i data-feather="linkedin"></i></a></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+			<li>
+				<a href="/">Home</a>
+			</li>
+			
+			<li>
+				<a href="/posts">All posts</a>
+			</li>
+			
+			<li>
+				<a href="/about">About</a>
+			</li>
+			
+			<li>
+				<a href="/tags">Tags</a>
+			</li>
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">eTrice (A open source ROOM framework for simplify your work)</h1>
+			<div class="meta">Posted at &mdash; Aug 20, 2019</div>
+		</div>
+
+		<div class="markdown">
+			<h1 id="motivation">Motivation</h1>
+<p>The well known event-drive message framework such as <a href="https://libevent.org/">libevent</a>, <a href="https://libuv.org/">libuv</a>, was wide used on many open source project, such like node-js, but the drawback is</p>
+<ul>
+<li>Task grain size</li>
+</ul>
+<p>Grain size of such framework commonly use <em>thread</em> as their execution unit/boundary, for example, if we want a small <em>float64 Pi (int precious)</em> service in our system, what choice do you prefer on IPC channel?</p>
+<ul>
+<li>domain socket?</li>
+<li>shared memory with OS sync primitive</li>
+<li>lightweigh channel like channel in Golang</li>
+</ul>
+<p>Sometime, this service was not necessary outside one task domain, but we still want to declare its interface clearly. Such <em>Pi()</em> may need CPU intensity work during its execution time, we don&rsquo;t want to couple with our app code with function call mode as it may block the <em>Parallel</em> work in this transition instead we want parallel our work as much as possible.</p>
+<p>Coroutine? Yes, but neither C or C++ don&rsquo;t have a good design patterns for coroutine, Golang has a good design pattern on Goroutine, but golang is not suitable for the resource limited HW(maybe later?), another downside of Golang is it seems like it has no good way to binding a task into one/some thread, we want to keep the cache HOT instead of reloaded it every time when it was called.</p>
+<ul>
+<li>Task handle</li>
+</ul>
+<p>Such framework was not well scalable on multi-thread environment, it will get performance degradation when process the CPU intensity task, such as computation work. Such as in Node.js project, developer will relay such task to another thread with built-in channel (work_thread). If you use libuv as the skeleton of your C/C++ project, you have more handy work to do that. Even in the Node.js project, the best practice is use the single-thread mode as your best, otherwise Node.js is not the origin design purpose of Node.js. It is was not designed to do such CPU intensity task in the first day of Node.js.</p>
+<ul>
+<li>Task decouple
+We try to write more reusable code in our project, even in a small project or in a resource limited resource project. We want provide a uniform interface outside with whatever representable interface, socket, TCP/UDP, &hellip; We want the task with explicit and well-doc interface towards outside.</li>
+</ul>
+<p>Inside of one small project, we also want to declare our interface firstly (Programming towards Interface), then the project will be smoothly depart them into different teams. But from more higher site of view, those internal interface was invisible, all the message interactive was happened internally.</p>
+<p>Then we need</p>
+<ul>
+<li>Process the task as fast/parallel as possible.(can be scalable with multi-core resource and can reuse the same CPU resource as much as possible, keep cache hot)</li>
+<li>Decouple the project with explicit layer. (service provider ~SPP and service consumer ~SAP)</li>
+</ul>
+<p>So, we want</p>
+<ul>
+<li>A high performance and reusable message framework.</li>
+<li>A simple representable methods to declare the interface.</li>
+<li>Event-drive methods with priority selections.</li>
+<li>Make developer focus on business logic instead of handling the sync issue.</li>
+</ul>
+<h1 id="the-implementation-of-some-projects">The implementation of some projects</h1>
+<p>Some open source project use in-house implementation on such challenge.</p>
+<ul>
+<li><a href="https://github.com/eclipse/paho.mqtt.c">Paho</a> (Apache MQTT implementation with C/C++)</li>
+</ul>
+<p>Communication with a shared global list and a global lock between threads, No notification scheme.
+Producer grad the lock firstly and insert the data into the list, release the lock.
+Consumer POLL the list to see whether or not changed, if changed, then grad the lock, fetch the newer data and release the lock.</p>
+<p>Drawback is:</p>
+<ul>
+<li>No notification scheme, the consumer will always poll the message list during the time slice given by the OS scheduler. Not a good energy saving patterns.</li>
+<li>Lots of OS sync primitive in the code, mutex, semaphore, etc. It is easily write code with bug.</li>
+</ul>
+<ul>
+<li>others (Many in-house implementation on this challenge)</li>
+</ul>
+<h1 id="actor-design-patterns">Actor design patterns</h1>
+<p>Actor design pattern was wide used on many language or framework as its built-in. such as Erlang, Golang(not exactly), Akka.
+Can we make it in a small project with less 10K code size?</p>
+<h2 id="room">ROOM</h2>
+<h2 id="implementation">Implementation</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/ObjecTime">ObjectTime</a>(Rational) (later brought by IBM Rose Realtime, now its name changed to one part of IBM Rational Architecture Real Time Edition).</li>
+<li><a href="https://en.wikipedia.org/wiki/Rational_Rhapsody">Rhapsody</a>. (I-Logic, later brought by IBM, now revolution to IBM Rhosophy, some overlap with IBM Rational Suite)</li>
+<li><a href="https://www.eclipse.org/etrice/">eTrice</a>. (Open Source project, less feature than the commercial ones, but we can make it better)</li>
+<li>Others</li>
+</ul>
+<p>ROOM recommended use the uniform formated message talking between actors, no sync primitive needed. The traditional IPC methods will be translated into native message with additional <em>PROXY</em> actor implemented.
+The following picture will demonstrate the relation between actor, threads, process.</p>
+<p><img src="img/actor.png" alt="Actor"></p>
+<h2 id="why-room-was-not-popular-in-the-software-domain">Why ROOM was not popular in the software domain?</h2>
+<p>As far as know, ROOM was wide used in Tele, Auto, Aerospace industry, the common characteristic of both area is it require more serious requirement than the toy electronics, If you look at the customer of the both commercial ROOM tools, Ericsson, Bosch,  etc.</p>
+<p>Some disadvantages in ROOM are:</p>
+<ul>
+<li>Learning curve. ROOM use DSL to represent FSM change internal, even it is a subset of BIG UML2, it need the developer to learn it, BUT, you will be used to program with that once you learn it.</li>
+<li>Making the logic complex than natural. Maybe the whole world is COMPLEX than you think, Promise/Await design patterns was impossible in some business logic. for example, TCP/IP stack has more than 100 state change in its FSM, it really hard to understand its implementation logic. I must admit ROOM make the logic more complex in some side, you need switch between the front end GUI and the generated code, you need to switch your thinking between two dimensions all the time.</li>
+</ul>
+<p>My experience is</p>
+<ul>
+<li>decouple the message skeleton with your implementation.</li>
+<li>try to declare your interface with a narrow view firstly.</li>
+<li>refactor your code all the time.</li>
+</ul>
+<h2 id="practice">Practice</h2>
+<p>In our project, we use eTrice to translate some existed project into new actor way of working with some additional home work based on that.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div>
+		<div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = 'eshenhu';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> © Copyright notice |  <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-123-45', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+<script>feather.replace()</script>
+</body>
+</html>

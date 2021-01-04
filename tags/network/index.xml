@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>network on shengli&#39;s blog</title>
+    <link>https://eshenhu.github.io/tags/network/</link>
+    <description>Recent content in network on shengli&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Tue, 22 May 2018 18:51:28 +0000</lastBuildDate><atom:link href="https://eshenhu.github.io/tags/network/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Use DPDK to accelerate LTE networks</title>
+      <link>https://eshenhu.github.io/posts/use-dpdk-to-accelerate-lte-networks/</link>
+      <pubDate>Tue, 22 May 2018 18:51:28 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/use-dpdk-to-accelerate-lte-networks/</guid>
+      <description>Along with the revolution of FlexRAN, the Tele was required to provide more flexible services to the customers. One of them is Tele want to provide more customsize services to the paticular users, such like Oil, Medical etc manufacture industries, who want intergrate more industried services within some fixed area.</description>
+    </item>
+    
+    <item>
+      <title>Efficient data transfer through zero copy</title>
+      <link>https://eshenhu.github.io/posts/efficient-data-transfer-through-zero-copy/</link>
+      <pubDate>Mon, 05 Jun 2017 00:21:11 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/efficient-data-transfer-through-zero-copy/</guid>
+      <description>Zero-copy I/O practice in project Recently weeks, I was working on how to exploit the potentialities with the GMAC(1G Ethernet Media Access Controller) on the SoC in my desktop.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,90 @@
+#eTrice (A open source ROOM framework for simplify your work)
+
+## Motivation
+
+The well known event-drive message framework such as [libevent](https://libevent.org/), [libuv](https://libuv.org/), was wide used on many open source project, such like node-js, but the drawback is 
+
+* Task grain size 
+
+ Grain size of such framework commonly use _thread_ as their execution unit/boundary, for example, if we want a small _float64 Pi (int precious)_ service in our system, what choice do you prefer on IPC channel? 
+  - domain socket?
+  - shared memory with OS sync primitive
+  - lightweigh channel like channel in Golang
+
+ Sometime, this service was not necessary outside one task domain, but we still want to declare its interface clearly. Such _Pi()_ may need CPU intensity work during its execution time, we don't want to couple with our app code with function call mode as it may block the _Parallel_ work in this transition instead we want parallel our work as much as possible. 
+
+ Coroutine? Yes, but neither C or C++ don't have a good design patterns for coroutine, Golang has a good design pattern on Goroutine, but golang is not suitable for the resource limited HW(maybe later?), another downside of Golang is it seems like it has no good way to binding a task into one/some thread, we want to keep the cache HOT instead of reloaded it every time when it was called.
+
+* Task handle
+
+ Such framework was not well scalable on multi-thread environment, it will get performance degradation when process the CPU intensity task, such as computation work. Such as in Node.js project, developer will relay such task to another thread with built-in channel (work_thread). If you use libuv as the skeleton of your C/C++ project, you have more handy work to do that. Even in the Node.js project, the best practice is use the single-thread mode as your best, otherwise Node.js is not the origin design purpose of Node.js. It is was not designed to do such CPU intensity task in the first day of Node.js. 
+
+* Task decouple
+We try to write more reusable code in our project, even in a small project or in a resource limited resource project. We want provide a uniform interface outside with whatever representable interface, socket, TCP/UDP, ... We want the task with explicit and well-doc interface towards outside. 
+
+Inside of one small project, we also want to declare our interface firstly (Programming towards Interface), then the project will be smoothly depart them into different teams. But from more higher site of view, those internal interface was invisible, all the message interactive was happened internally. 
+
+Then we need
+
+ - Process the task as fast/parallel as possible.(can be scalable with multi-core resource and can reuse the same CPU resource as much as possible, keep cache hot)
+ - Decouple the project with explicit layer. (service provider ~SPP and service consumer ~SAP) 
+
+So, we want
+
+  - A high performance and reusable message framework.
+  -  A simple representable methods to declare the interface.
+  -  Event-drive methods with priority selections.
+  -  Make developer focus on business logic instead of handling the sync issue.
+  
+### The implementation of some projects
+
+Some open source project use in-house implementation on such challenge.
+
+* [Paho](https://github.com/eclipse/paho.mqtt.c) (Apache MQTT implementation with C/C++)
+
+Communication with a shared global list and a global lock between threads, No notification scheme.
+Producer grad the lock firstly and insert the data into the list, release the lock.
+Consumer POLL the list to see whether or not changed, if changed, then grad the lock, fetch the newer data and release the lock.
+
+Drawback is:
+
+  - No notification scheme, the consumer will always poll the message list during the time slice given by the OS scheduler. Not a good energy saving patterns.  
+  - Lots of OS sync primitive in the code, mutex, semaphore, etc. It is easily write code with bug.
+
+* others (Many in-house implementation on this challenge)
+
+### Actor design patterns
+
+Actor design pattern was wide used on many language or framework as its built-in. such as Erlang, Golang(not exactly), Akka.
+Can we make it in a small project with less 10K code size?
+
+### ROOM
+
+#### Implementation
+
+* [ObjectTime](https://en.wikipedia.org/wiki/ObjecTime)(Rational) (later brought by IBM Rose Realtime, now its name changed to one part of IBM Rational Architecture Real Time Edition).
+* [Rhapsody](https://en.wikipedia.org/wiki/Rational_Rhapsody). (I-Logic, later brought by IBM, now revolution to IBM Rhosophy, some overlap with IBM Rational Suite)
+* [eTrice](https://www.eclipse.org/etrice/). (Open Source project, less feature than the commercial ones, but we can make it better)
+* Others
+
+ROOM recommended use the uniform formated message talking between actors, no sync primitive needed. The traditional IPC methods will be translated into native message with additional _PROXY_ actor implemented.
+The following picture will demonstrate the relation between actor, threads, process.
+
+
+#### Why ROOM was not popular in the software domain?
+As far as know, ROOM was wide used in Tele, Auto, Aerospace industry, the common characteristic of both area is it require more serious requirement than the toy electronics, If you look at the customer of the both commercial ROOM tools, Ericsson, Bosch,  etc.
+
+Some disadvantages in ROOM are:
+
+* Learning curve. ROOM use DSL to represent FSM change internal, even it is a subset of BIG UML2, it need the developer to learn it, BUT, you will be used to program with that once you learn it.
+* Making the logic complex than natural. Maybe the whole world is COMPLEX than you think, Promise/Await design patterns was impossible in some business logic. for example, TCP/IP stack has more than 100 state change in its FSM, it really hard to understand its implementation logic. I must admit ROOM make the logic more complex in some side, you need switch between the front end GUI and the generated code, you need to switch your thinking between two dimensions all the time. 
+
+My experience is 
+
+ - decouple the message skeleton with your implementation.
+ - try to declare your interface with a narrow view firstly.
+ - refactor your code all the time.
+
+### Practice
+In our project, we use eTrice to translate some existed project into new actor way of working with some additional home work based on that.
+

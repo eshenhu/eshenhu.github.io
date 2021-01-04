@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>c&#43;&#43; on shengli&#39;s blog</title>
+    <link>https://eshenhu.github.io/tags/c&#43;&#43;/</link>
+    <description>Recent content in c&#43;&#43; on shengli&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© Copyright notice</copyright>
+    <lastBuildDate>Sat, 03 Oct 2020 21:46:58 +0000</lastBuildDate><atom:link href="https://eshenhu.github.io/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Init object with functional options</title>
+      <link>https://eshenhu.github.io/posts/init-object-with-functional-options/</link>
+      <pubDate>Sat, 03 Oct 2020 21:46:58 +0000</pubDate>
+      
+      <guid>https://eshenhu.github.io/posts/init-object-with-functional-options/</guid>
+      <description>Motivation During the coding, we often need to make some configuration on &amp;ldquo;object&amp;rdquo; or &amp;ldquo;entity&amp;rdquo;. In Golang&amp;rsquo;s world, the following example:</description>
+    </item>
+    
+  </channel>
+</rss>
